@@ -36,4 +36,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    //Dependencia gradle para el java_cup_runtime
+    implementation 'com.github.vbmacher:java-cup-runtime:11b-20160615'
 }

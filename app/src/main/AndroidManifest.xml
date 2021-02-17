@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Compilacion"/>
+        <activity android:name=".Reportes.report_errores" />
+        <activity android:name=".Reportes.report_animaciones" />
+        <activity android:name=".Reportes.report_objetos" />
+        <activity android:name=".Reportes.report_colores" />
+        <activity android:name=".Reportes.report_operadores" />
     </application>
 
 </manifest>

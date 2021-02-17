@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemOcurrencias"
+        android:title="Reporte Ocurrencias" />
+    <item
+        android:id="@+id/itemColores"
+        android:title="Reporte Colores" />
+    <item
+        android:id="@+id/itemObjetos"
+        android:title="Reporte Objetos" />
+    <item
+        android:id="@+id/itemAnimaciones"
+        android:title="Reporte Animaciones" />
+    <item
+        android:id="@+id/itemErrores"
+        android:title="Reporte errores" />
+</menu>
