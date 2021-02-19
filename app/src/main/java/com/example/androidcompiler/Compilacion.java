@@ -1,5 +1,6 @@
 package com.example.androidcompiler;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidcompiler.Pintar.Dibujar;
 import com.example.androidcompiler.Analizadores.Lexico.Lexico;
 import com.example.androidcompiler.Analizadores.Sintactico.Sintactico;
+import com.example.androidcompiler.Reportes.report_errores;
 
 import java.io.StringReader;
 
@@ -59,6 +61,40 @@ public class Compilacion extends AppCompatActivity {
         setContentView(new Dibujar(this,pars.getFigurass()));
     }
 
+
+    //metodo para mostrar los errores/enviar los errores al activity errores
+    public void mostrarErrores(){
+        Intent intent = new Intent(this, report_errores.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("erroresLexicos",lex.getListaErrores());
+        bundle.putParcelableArrayList("erroresSintacticos",pars.getErrores());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    //metodo para mostrar reporte de colores usados en el codigo
+    /*public void mostrarColoresUsados(){
+        Intent intent = new Intent(this,ColoresUsadosActivity.class);
+        intent.putExtra("usos",analizadorLexico.recuperarUsos());
+        startActivity(intent);
+    }*/
+
+    //metodo para mostrar reporte de objetos/figuras usados en el codigo
+    /*public void mostrarObjetosUsados(){
+        Intent intent = new Intent(this,ObjetosUsadosActivity.class);
+        intent.putExtra("usos",analizadorLexico.recuperarUsos());
+        intent.putExtra("usosLinea",analizadorSintactico.recuperarUsosLinea()[0]);
+        startActivity(intent);
+    }*/
+
+    //metodo para mostrar reporte de animaciones generadas
+    /*public void mostrarAnimacionesHechas(){
+        Intent intent = new Intent(this,AnimacionesHechasActivity.class);
+        intent.putExtra("usos",analizadorLexico.recuperarUsos());
+        intent.putExtra("usosLinea",analizadorSintactico.recuperarUsosLinea()[1]);
+        startActivity(intent);
+    }*/
+
     //Metodo que muestra las opciones de los reportes asi como los restringe si en el caso se encontro un error de copilacion
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_opciones,menu);
@@ -88,7 +124,7 @@ public class Compilacion extends AppCompatActivity {
         }else if(id==R.id.itemAnimaciones){
             //mostrarAnimacionesHechas();
         }else if(id==R.id.itemErrores){
-            //mostrarErrores();
+            mostrarErrores();
         }else if(id==android.R.id.home){
             finish();
         }
