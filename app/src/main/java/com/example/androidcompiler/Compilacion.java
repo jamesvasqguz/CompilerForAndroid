@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.androidcompiler.Pintar.Dibujar;
 import com.example.androidcompiler.Analizadores.Lexico.Lexico;
 import com.example.androidcompiler.Analizadores.Sintactico.Sintactico;
 
@@ -36,6 +37,7 @@ public class Compilacion extends AppCompatActivity {
         //Verificamos si el analizador lexico encontro un error.
         //Verificamos si el analizador sintactico encontro un error.
         if(lex.getListaErrores().size()==0 && pars.getErrores().size()==0){
+                dibujarFiguras();
         }
     }
     //Metodo que analiza lo ingresado por el usuario y mostrara un mensaje emergente en el activity
@@ -52,6 +54,10 @@ public class Compilacion extends AppCompatActivity {
         }
     }
 
+    //Este metodo grafica o anima las figuras que se hayan encontrado en el texto que ingreso el usuario
+    public void dibujarFiguras(){
+        setContentView(new Dibujar(this,pars.getFigurass()));
+    }
 
     //Metodo que muestra las opciones de los reportes asi como los restringe si en el caso se encontro un error de copilacion
     public boolean onCreateOptionsMenu(Menu menu){
