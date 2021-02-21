@@ -3,8 +3,6 @@ package com.example.androidcompiler.Analizadores.Lexico;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-;
-
 /**
  *
  * @author jara
@@ -63,13 +61,13 @@ public class TError implements Parcelable {
     public void setColumna(int columna) {
         this.columna = columna;
     }
+
     protected TError(Parcel in) {
         tipo = in.readString();
         line = in.readInt();
         columna = in.readInt();
         lexema = in.readString();
         descripcion = in.readString();
-
     }
 
     @Override
@@ -78,7 +76,22 @@ public class TError implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(tipo);
+        parcel.writeInt(line);
+        parcel.writeInt(columna);
+        parcel.writeString(lexema);
+        parcel.writeString(descripcion);
     }
+    public static final Creator<TError> CREATOR = new Creator<TError>() {
+        @Override
+        public TError createFromParcel(Parcel in) {
+            return new TError(in);
+        }
+
+        @Override
+        public TError[] newArray(int size) {
+            return new TError[size];
+        }
+    };
 }

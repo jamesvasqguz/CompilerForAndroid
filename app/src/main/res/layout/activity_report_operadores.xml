@@ -10,7 +10,7 @@
         android:id="@+id/textView5"
         android:layout_width="345dp"
         android:layout_height="86dp"
-        android:text="Reporte de Ocurrencias de Operadores Matemáticos "
+        android:text="Reporte de Ocurrencias de Operadores Matemáticos."
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold|italic"
@@ -19,4 +19,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.024" />
+
+    <LinearLayout
+        android:layout_width="345dp"
+        android:layout_height="588dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <TableLayout
+                    android:id="@+id/tablaOpe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </HorizontalScrollView>
+        </ScrollView>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

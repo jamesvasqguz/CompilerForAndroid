@@ -8,39 +8,41 @@ package com.example.androidcompiler.Analizadores.Lexico;
 /** CUP generated class containing symbol constants. */
 public class SintacticoSym {
   /* terminals */
-  public static final int CR = 22;
-  public static final int CNE = 28;
-  public static final int CM = 26;
-  public static final int CIR = 16;
-  public static final int SUMA = 4;
-  public static final int CNA = 25;
-  public static final int CUR = 15;
-  public static final int CAZ = 21;
-  public static final int CC = 27;
-  public static final int REC = 18;
-  public static final int COMA = 10;
-  public static final int POL = 19;
-  public static final int CAM = 24;
-  public static final int GRAF = 11;
+  public static final int CR = 23;
+  public static final int CNE = 29;
+  public static final int CM = 27;
+  public static final int CIR = 17;
+  public static final int SUMA = 5;
+  public static final int CNA = 26;
+  public static final int CUR = 16;
+  public static final int CAZ = 22;
+  public static final int CC = 28;
+  public static final int REC = 19;
+  public static final int COMA = 11;
+  public static final int POL = 20;
+  public static final int CAM = 25;
+  public static final int GRAF = 12;
   public static final int EOF = 0;
-  public static final int OBJ = 13;
-  public static final int DIV = 7;
+  public static final int OBJ = 14;
+  public static final int DIV = 8;
   public static final int error = 1;
-  public static final int NUMERO = 3;
-  public static final int ANT = 14;
-  public static final int LINE = 20;
-  public static final int CUADRA = 17;
+  public static final int NUMERO = 4;
+  public static final int ANT = 15;
+  public static final int LINE = 21;
+  public static final int CUADRA = 18;
   public static final int SALTO = 2;
-  public static final int MUL = 6;
-  public static final int PAC = 9;
-  public static final int ANI = 12;
-  public static final int CV = 23;
-  public static final int PAA = 8;
-  public static final int RESTA = 5;
+  public static final int MUL = 7;
+  public static final int ELEX = 3;
+  public static final int PAC = 10;
+  public static final int ANI = 13;
+  public static final int CV = 24;
+  public static final int PAA = 9;
+  public static final int RESTA = 6;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "SALTO",
+  "ELEX",
   "NUMERO",
   "SUMA",
   "RESTA",

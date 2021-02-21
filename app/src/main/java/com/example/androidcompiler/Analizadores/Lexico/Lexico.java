@@ -7,7 +7,8 @@ package com.example.androidcompiler.Analizadores.Lexico;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import static com.example.androidcompiler.Analizadores.Lexico.SintacticoSym.*;
-//import com.example.androidcompiler.Operadores;
+import com.example.androidcompiler.Analizadores.Lexico.TError;
+import com.example.androidcompiler.Operadores.*;
 
 // See https://github.com/jflex-de/jflex/issues/222
 @SuppressWarnings("FallThrough")
@@ -332,11 +333,19 @@ public class Lexico implements java_cup.runtime.Scanner {
 
   /* user code: */
     /*Almacenamos todos los errores en un lista*/
-    private ArrayList<TError> listaErrores = new ArrayList<>();
-    
-    public ArrayList<TError> getListaErrores() {
-        return listaErrores;
+    private ArrayList<TError> errores = new ArrayList<>();
+    //Recuperamos los Errores de la lista
+    public ArrayList<TError> getErrores() {
+        return this.errores;
     }
+    //Almacenas todos los objetos y colores que se usaran
+	private int[] usados = new int[14];
+	
+ 	//metodo para recuperar los usos
+ 	public int[] gettUsados(){
+ 		return this.usados;
+ 	}
+    
 
 
   /**
@@ -592,8 +601,8 @@ yycolumn=1;
     if (!zzEOFDone) {
       zzEOFDone = true;
     
-		for(int i=0;i<listaErrores.size();i++){
-        System.out.println("Imprimiendo errores: -----> "+listaErrores.get(i).toString());
+		for(int i=0;i<errores.size();i++){
+        System.out.println("Imprimiendo errores: -----> "+errores.get(i).toString());
         i++;        
         }
   yyclose();    }
@@ -751,8 +760,9 @@ yycolumn=1;
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { listaErrores.add(new TError(yytext(),yyline,yycolumn,"Error Lexico","Símbolo no existe en el lenguaje"));
-        System.out.println("Se encontro un Error Lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yycolumn);
+            {     errores.add(new TError(yytext(),yyline,yycolumn,"Error Lexico","Símbolo no existe en el lenguaje"));
+                  System.out.println("Se encontro un Error Lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yycolumn);
+              return new Symbol(ELEX, yyline, yycolumn, yytext());
             }
             // fall through
           case 30: break;
@@ -807,37 +817,37 @@ yycolumn=1;
             // fall through
           case 40: break;
           case 12:
-            { return new Symbol(CAZ,yyline,yycolumn,yytext());
+            { usados[0]++;return new Symbol(CAZ,yyline,yycolumn,yytext());
             }
             // fall through
           case 41: break;
           case 13:
-            { return new Symbol(CC,yyline,yycolumn,yytext());
+            { usados[6]++;return new Symbol(CC,yyline,yycolumn,yytext());
             }
             // fall through
           case 42: break;
           case 14:
-            { return new Symbol(CR,yyline,yycolumn,yytext());
+            { usados[1]++;return new Symbol(CR,yyline,yycolumn,yytext());
             }
             // fall through
           case 43: break;
           case 15:
-            { return new Symbol(CUR,yyline,yycolumn,yytext());
+            { usados[13]++;return new Symbol(CUR,yyline,yycolumn,yytext());
             }
             // fall through
           case 44: break;
           case 16:
-            { return new Symbol(LINE,yyline,yycolumn,yytext());
+            { usados[12]++;return new Symbol(LINE,yyline,yycolumn,yytext());
             }
             // fall through
           case 45: break;
           case 17:
-            { return new Symbol(CNE,yyline,yycolumn,yytext());
+            { usados[7]++;return new Symbol(CNE,yyline,yycolumn,yytext());
             }
             // fall through
           case 46: break;
           case 18:
-            { return new Symbol(CV,yyline,yycolumn,yytext());
+            { usados[2]++;return new Symbol(CV,yyline,yycolumn,yytext());
             }
             // fall through
           case 47: break;
@@ -847,7 +857,7 @@ yycolumn=1;
             // fall through
           case 48: break;
           case 20:
-            { return new Symbol(CM,yyline,yycolumn,yytext());
+            { usados[5]++;return new Symbol(CM,yyline,yycolumn,yytext());
             }
             // fall through
           case 49: break;
@@ -857,17 +867,17 @@ yycolumn=1;
             // fall through
           case 50: break;
           case 22:
-            { return new Symbol(CIR,yyline,yycolumn,yytext());
+            { usados[8]++;return new Symbol(CIR,yyline,yycolumn,yytext());
             }
             // fall through
           case 51: break;
           case 23:
-            { return new Symbol(CNA,yyline,yycolumn,yytext());
+            { usados[4]++;return new Symbol(CNA,yyline,yycolumn,yytext());
             }
             // fall through
           case 52: break;
           case 24:
-            { return new Symbol(CAM,yyline,yycolumn,yytext());
+            { usados[3]++;return new Symbol(CAM,yyline,yycolumn,yytext());
             }
             // fall through
           case 53: break;
@@ -877,7 +887,7 @@ yycolumn=1;
             // fall through
           case 54: break;
           case 26:
-            { return new Symbol(CUADRA,yyline,yycolumn,yytext());
+            { usados[9]++;return new Symbol(CUADRA,yyline,yycolumn,yytext());
             }
             // fall through
           case 55: break;
@@ -887,12 +897,12 @@ yycolumn=1;
             // fall through
           case 56: break;
           case 28:
-            { return new Symbol(POL,yyline,yycolumn,yytext());
+            { usados[11]++;return new Symbol(POL,yyline,yycolumn,yytext());
             }
             // fall through
           case 57: break;
           case 29:
-            { return new Symbol(REC,yyline,yycolumn,yytext());
+            { usados[10]++;return new Symbol(REC,yyline,yycolumn,yytext());
             }
             // fall through
           case 58: break;

@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.androidcompiler.Pintar.Dibujar;
 import com.example.androidcompiler.Analizadores.Lexico.Lexico;
 import com.example.androidcompiler.Analizadores.Sintactico.Sintactico;
+import com.example.androidcompiler.Reportes.report_colores;
 import com.example.androidcompiler.Reportes.report_errores;
+import com.example.androidcompiler.Reportes.report_objetos;
+import com.example.androidcompiler.Reportes.report_operadores;
 
 import java.io.StringReader;
 
@@ -38,7 +41,7 @@ public class Compilacion extends AppCompatActivity {
 
         //Verificamos si el analizador lexico encontro un error.
         //Verificamos si el analizador sintactico encontro un error.
-        if(lex.getListaErrores().size()==0 && pars.getErrores().size()==0){
+        if(lex.getErrores().size()==0 && pars.getErrores().size()==0){
                 dibujarFiguras();
         }
     }
@@ -46,7 +49,7 @@ public class Compilacion extends AppCompatActivity {
     public void analizarDatos(String datosEntrada){
         try {
             pars.parse();
-            if(pars.getErrores().size()==0 && lex.getListaErrores().size()==0){
+            if(pars.getErrores().size()==0 && lex.getErrores().size()==0){
                 Toast.makeText(this,"Compilacion finalizada con exito!",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this,"Se encontro Errores en la Compilacion: "+pars.getErrores().size(),Toast.LENGTH_LONG).show();
@@ -66,40 +69,40 @@ public class Compilacion extends AppCompatActivity {
     public void mostrarErrores(){
         Intent intent = new Intent(this, report_errores.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("erroresLexicos",lex.getListaErrores());
+        bundle.putParcelableArrayList("erroresLexicos",lex.getErrores());
         bundle.putParcelableArrayList("erroresSintacticos",pars.getErrores());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+    //metodo para mostrar reporte de ocurrencias usadas en el codigo
+    public void mostrarOcurrencias(){
+        Intent intent = new Intent(this, report_operadores.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("listaOp",pars.getOcurrencias());
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     //metodo para mostrar reporte de colores usados en el codigo
-    /*public void mostrarColoresUsados(){
-        Intent intent = new Intent(this,ColoresUsadosActivity.class);
-        intent.putExtra("usos",analizadorLexico.recuperarUsos());
+    public void mostrarColores(){
+        Intent intent = new Intent(this, report_colores.class);
+        intent.putExtra("dataUsados",lex.gettUsados());
         startActivity(intent);
-    }*/
+    }
 
     //metodo para mostrar reporte de objetos/figuras usados en el codigo
-    /*public void mostrarObjetosUsados(){
-        Intent intent = new Intent(this,ObjetosUsadosActivity.class);
-        intent.putExtra("usos",analizadorLexico.recuperarUsos());
-        intent.putExtra("usosLinea",analizadorSintactico.recuperarUsosLinea()[0]);
+    public void mostrarObjetosUsados(){
+        Intent intent = new Intent(this, report_objetos.class);
+        intent.putExtra("usadosLex",lex.gettUsados());
+        intent.putExtra("usadosSin",pars.gettUsados()[0]);
         startActivity(intent);
-    }*/
-
-    //metodo para mostrar reporte de animaciones generadas
-    /*public void mostrarAnimacionesHechas(){
-        Intent intent = new Intent(this,AnimacionesHechasActivity.class);
-        intent.putExtra("usos",analizadorLexico.recuperarUsos());
-        intent.putExtra("usosLinea",analizadorSintactico.recuperarUsosLinea()[1]);
-        startActivity(intent);
-    }*/
+    }
 
     //Metodo que muestra las opciones de los reportes asi como los restringe si en el caso se encontro un error de copilacion
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_opciones,menu);
         //Si hay algun error de compilacion solo mostrara el Reporte de Errores
-        if(lex.getListaErrores().size()==0 && pars.getErrores().size()==0){
+        if(lex.getErrores().size()==0 && pars.getErrores().size()==0){
             menu.findItem(R.id.itemErrores).setEnabled(false);
         }else{
             //De no haber ningun error se mostran todos los demas reportes a excepcion del de Errores
@@ -116,13 +119,11 @@ public class Compilacion extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==R.id.itemOcurrencias){
-
+              mostrarOcurrencias();
         }else if(id==R.id.itemColores){
-            //mostrarColoresUsados();
+              mostrarColores();
         }else if(id==R.id.itemObjetos){
-            //mostrarObjetosUsados();
-        }else if(id==R.id.itemAnimaciones){
-            //mostrarAnimacionesHechas();
+              mostrarObjetosUsados();
         }else if(id==R.id.itemErrores){
             mostrarErrores();
         }else if(id==android.R.id.home){
