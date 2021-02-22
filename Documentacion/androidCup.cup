@@ -1,52 +1,94 @@
-package  com.mycompany.android;
+package com.example.androidcompiler.Analizadores.Sintactico;
 import java_cup.runtime.*;
-import java.util.LinkedList;
-import com.mycompany.android.lexer.sym;
-import com.mycompany.android.lexer.Lexico;
-import com.mycompany.android.lexer.TError;
+import com.example.androidcompiler.Analizadores.Lexico.*;
+import com.example.androidcompiler.Operadores.Ocurrencia;
+import com.mycompany.android.Animaciones.Animacion;
+import java.util.ArrayList;
+import com.example.androidcompiler.Figuras.*;
+import com.example.androidcompiler.Analizadores.Lexico.TError;
+
+class Sintactico;
 
 parser code{:
-public parser(Lexico lex){
+public Sintactico(Lexico lex){
 super(lex);
 }
 
  /*Almacenamos todos los errores en un lista*/
     public String resultado="";
-    public static LinkedList<TError> tablaErrorSintactico=new LinkedList<TError>();
 
+    public ArrayList<Ocurrencia> ocurrencias = new ArrayList<>();
+    public ArrayList<Figuras> figurass = new ArrayList<>();
+	public ArrayList<TError> errores = new ArrayList<>();
+	public ArrayList<Animacion> animaciones = new ArrayList<>();
+    private int[] usados = new int[2];
+    
+    private Symbol s;
+
+    //Metodo que recupera un error en la sintaxis
     public void syntax_error(Symbol s){
-        String lexema = s.value.toString();
-        int fila = (s.right+1);
-        int columna = (s.left+1);
-        System.out.println("Error Sintactico recuperado");
-        System.out.println("\t\t Lexema: "+lexema);
-        System.out.println("\t\t Linea: "+fila);
-        System.out.println("\t\t Columna: "+columna);
-        TError dato = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
-        tablaErrorSintactico.add(dato);
-    }
-    /**
-     * Método al que se llama automáticamente ante algún error sintáctico 
-     * en el que ya no es posible una recuperación de errores.
-     **/ 
+        String lexema =String.valueOf(s.value);
+        int fila = s.right;
+        int columna = s.left;
+
+        errores.add(new TError(lexema,fila,columna,"Error Sintactico","Se esperaba graficar o animar"));
+		System.out.println("Se encontro un Error Sintactico: "+lexema+", en la linea: "+fila+", en la columna: "+columna);
+        }
+
+    //Método al que se llama automáticamente ante algún error sintáctico en el que ya no es posible una recuperación de errores.
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-        System.out.println("Error síntactico irrecuperable en la Línea " + 
-        (s.left+1)+ " Columna "+(s.right+1)+". Componente " + s.value + 
-        " no reconocido."); 
+        System.out.println("Error síntactico irrecuperable en la Línea "+(s.left+1)+" Columna "+(s.right+1)+". Componente "+s.value+" no reconocido."); 
     }
+    
+    //Metodo que recupera los errores
+    public ArrayList<TError> getErrores(){
+		return this.errores;
+	}
+
+    //Metodo que recupera las ocurrencias
+    public ArrayList<Ocurrencia> getOcurrencias() {
+        return this.ocurrencias;
+    }
+
+    //Metodo que recupera las figuras a graficar
+	public ArrayList<Figuras> getFigurass() {
+        return figurass;
+    }
+	
+	//Metodo que recupera las animaciones 
+	public ArrayList<Animacion> getAnimaciones() {
+        return this.animaciones;
+    }
+    
+    //metodo para recuperar los usos
+ 	public int[] gettUsados(){
+ 		return this.usados;
+ 	}
+ 	
+    //Metodo que devuelve un float de un objeto
+    public float getFloat(Object object){
+		return Float.valueOf(String.valueOf(object));
+	}
+
+    //Metodo que devuelve un int de un objeto
+    public int getInt(Object object){
+		return Integer.valueOf(String.valueOf(object));
+	}
 :}
 
 action code{:
 :}
 
 /*Declaramos terminales y no terminales*/
+terminal SALTO;
+terminal ELEX;
 terminal String NUMERO;
 terminal String SUMA,RESTA,MUL,DIV,PAA,PAC,COMA;
 terminal String GRAF,ANI,OBJ,ANT,CUR;
 terminal String CIR,CUADRA,REC,POL,LINE;
 terminal String CAZ,CR,CV,CAM,CNA,CM,CC,CNE;
 
-non terminal String s,exp,animar,graficar,forma,accion,color;
+non terminal String s,exp,animar,graficar,accion,color;
 
 /*Precedencia de menor a mayor */
 precedence left SUMA,RESTA;
@@ -57,29 +99,47 @@ precedence left PAA,PAC;
 start with s;
  
 /*Definimos la gramatica*/
-s ::= exp:a {: resultado=a;:}
+s ::= exp
       ; 
 
 exp::= graficar
-      |graficar exp
-      |animar
+      |graficar SALTO
+      |graficar SALTO s  
+      |SALTO
+      |SALTO s  
+      |ANI OBJ ANT PAA accion COMA accion COMA animar PAC SALTO s 
+      |error:e {: System.out.println("Se encontro un ERROR SINTACTICO"); :} SALTO s
       ;
 
-graficar::= GRAF forma PAA accion COMA accion COMA accion COMA color PAC {:System.out.println("Cadena leida correctamente");:}
-           |GRAF forma PAA accion COMA accion COMA accion COMA accion COMA color PAC {:System.out.println("Cadena leida correctamente");:}
-           |GRAF forma PAA accion COMA accion COMA accion COMA accion COMA accion COMA color PAC {:System.out.println("Cadena leida correctamente");:}
+graficar::= GRAF CIR:z PAA accion:a1 COMA accion:a2 COMA accion:a3 COMA color:c PAC {:
+                figurass.add(new Circulo(getFloat(a1),getFloat(a2),getFloat(a3),String.valueOf(c),a1left));   
+                System.out.println("Se grafico un: "+String.valueOf(z));
+                System.out.println("Cadena leida correctamente!");
+                :}
+            |GRAF CUADRA:z PAA accion:a1 COMA accion:a2 COMA accion:a3 COMA color:c PAC {:
+                figurass.add(new Cuadrado(getFloat(a1),getFloat(a2),getFloat(a3),String.valueOf(c),a1left));   
+                System.out.println("Se grafico un: "+String.valueOf(z));
+                System.out.println("Cadena leida correctamente!");
+                :}
+            |GRAF REC:z PAA accion:a1 COMA accion:a2 COMA accion:a3 COMA accion:a4 COMA color:c PAC {:
+                figurass.add(new Rectangulo(getFloat(a1),getFloat(a2),getFloat(a3),getFloat(a4),String.valueOf(c),a1left));   
+                System.out.println("Se grafico un: "+String.valueOf(z));
+                System.out.println("Cadena leida correctamente");
+            :}
+            |GRAF LINE:z PAA accion:a1 COMA accion:a2 COMA accion:a3 COMA accion:a4 COMA color:c PAC {:
+                figurass.add(new Linea(getFloat(a1),getFloat(a2),getFloat(a3),getFloat(a4),String.valueOf(c),a1left));   
+                System.out.println("Se grafico un: "+String.valueOf(z));
+                System.out.println("Cadena leida correctamente");
+            :}
+            |GRAF POL:z PAA accion:a1 COMA accion:a2 COMA accion:a3 COMA accion:a4 COMA accion:a5 COMA color:c PAC {:
+                figurass.add(new Poligono(getFloat(a1),getFloat(a2),getFloat(a3),getFloat(a4),getInt(a5),String.valueOf(c),a1left));   
+                System.out.println("Se grafico un: "+String.valueOf(z));
+                System.out.println("Cadena leida correctamente");:}
            ;
 
-animar::= ANI OBJ ANT PAA accion COMA accion COMA CUR PAC
-          |ANI OBJ ANT PAA accion COMA accion COMA LINE PAC
+animar::= CUR
+          |LINE 
           ;
-
-forma::= CIR:a {:RESULT=a; System.out.println("forma es: "+RESULT); :}
-         |CUADRA:a {:RESULT=a; System.out.println("forma es: "+RESULT); :}
-         |REC:a {:RESULT=a; System.out.println("forma es: "+RESULT); :} 
-         |POL:a {:RESULT=a; System.out.println("forma es: "+RESULT); :}
-         |LINE:a {:RESULT=a; System.out.println("forma es: "+RESULT); :}
-         ;
 
 color::= CAZ:a {:RESULT=a; System.out.println("color es: "+RESULT); :}
         |CR:a {:RESULT=a; System.out.println("color es: "+RESULT); :} 
@@ -91,27 +151,42 @@ color::= CAZ:a {:RESULT=a; System.out.println("color es: "+RESULT); :}
         |CNE:a {:RESULT=a; System.out.println("color es: "+RESULT); :}
         ;
   
-accion::= accion:a SUMA accion:b{: double valor1 =Double.parseDouble(a); 
+accion::= accion:a SUMA:op accion:b {: 
+                                    String occu="  "+a+"  "+op+"  "+b+"  ";
+                                    ocurrencias.add(new Ocurrencia("+",opleft,opright,occu));
+                                    double valor1 =Double.parseDouble(a); 
                                     double valor2 =Double.parseDouble(b); 
                                     double r=valor1 + valor2;
                                     RESULT=String.valueOf(r);
-                                    System.out.println("Resultado es: "+RESULT); :}
-        |accion:a RESTA accion:b{: double valor1 =Double.parseDouble(a); 
+                                    System.out.println("Resultado es: "+RESULT); 
+                                    :}
+        |accion:a RESTA:op accion:b {:
+                                    String occu="  "+a+"  "+op+"  "+b+"  ";
+                                    ocurrencias.add(new Ocurrencia("-",opleft,opright,occu));
+                                    double valor1 =Double.parseDouble(a); 
                                     double valor2 =Double.parseDouble(b); 
                                     double r= valor1-valor2;
                                     RESULT=String.valueOf(r);
-                                    System.out.println("Resultado es: "+RESULT); :}
-        |accion:a MUL accion:b  {: double valor1 =Double.parseDouble(a); 
+                                    System.out.println("Resultado es: "+RESULT); 
+                                    :}
+        |accion:a MUL:op accion:b {: 
+                                    String occu="  "+a+"  "+op+"  "+b+"  ";
+                                    ocurrencias.add(new Ocurrencia("*",opleft,opright,occu));
+                                    double valor1 =Double.parseDouble(a); 
                                     double valor2 =Double.parseDouble(b); 
                                     double r= valor1*valor2;
                                     RESULT=String.valueOf(r);
-                                    System.out.println("Resultado es: "+RESULT); :}
-        |accion:a DIV accion:b  {: double valor1 =Double.parseDouble(a); 
+                                    System.out.println("Resultado es: "+RESULT); 
+                                    :}
+        |accion:a DIV:op accion:b {: 
+                                    String occu="  "+a+"  "+op+"  "+b+"  ";
+                                    ocurrencias.add(new Ocurrencia("/",opleft,opright,occu));
+                                    double valor1 =Double.parseDouble(a); 
                                     double valor2 =Double.parseDouble(b); 
                                     double r= valor1/valor2;
                                     RESULT=String.valueOf(r);
-                                    System.out.println("Resultado es: "+RESULT); :}
+                                    System.out.println("Resultado es: "+RESULT); 
+                                    :}
         |PAA accion:a PAC {:RESULT =a; System.out.println("Parentesis en accion: "+RESULT);:}
         |NUMERO:a {:RESULT=a; System.out.println("NUMERO INGRESADO es: "+RESULT); :}
-        |error {:System.out.println("Error en la operacion");:}	
         ;
